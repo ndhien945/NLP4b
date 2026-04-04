@@ -1,0 +1,7 @@
+[core]
+    remote = dagshub
+['remote "dagshub"']
+    url = https://dagshub.com/ndhien945/NLP4b.dvc
+    auth = basic
+    user = ndhien945
+    password = ba0f77bc7b334fc44f2279ba9536524d40733ea5
