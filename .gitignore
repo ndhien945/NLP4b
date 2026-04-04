@@ -33,6 +33,7 @@ Thumbs.db
 data/*
 !data/dataset.py
 !data/.gitkeep
+!data/processed/*
 
 models/*
 !models/.gitkeep

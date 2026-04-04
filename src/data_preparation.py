@@ -1,6 +1,10 @@
 import os
 import json
 import random
+import sys
+
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 def aggregate_and_split(data_root="data", dataset_types=["UIT_HWDB_line", "UIT_HWDB_paragraph", "UIT_HWDB_word"], val_ratio=0.1, seed=42):
     """
