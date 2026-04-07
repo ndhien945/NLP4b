@@ -1,10 +1,13 @@
 import os
 import sys
 import time
-import torch
-from unsloth import FastVisionModel, is_bf16_supported
-from transformers import AutoModel, Trainer, TrainingArguments
 
+# Tắt cơ chế chặn lỗi thái quá của Unsloth (BẮT BUỘC ĐỂ CHẠY DEEPSEEK-OCR)
+os.environ["UNSLOTH_WARN_UNINITIALIZED"] = '0'
+
+import torch
+from transformers import AutoModel, Trainer, TrainingArguments
+from unsloth import FastVisionModel, is_bf16_supported
 
 # Định vị thư mục gốc để import các module local
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,31 +15,29 @@ project_root = os.path.dirname(current_dir)
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-# Import các class nạp dữ liệu chúng ta vừa viết hôm trước
+# Import các class nạp dữ liệu
 from src.dataset import OCRJSONDataset, DeepSeekOCRDataCollator
 
 def train_model(
     data_index_path="data/processed/train_split.json",
     output_dir="models/deepseek_lora",
-    lora_rank=16,          # Siêu tham số có thể điều chỉnh để báo cáo
-    learning_rate=2e-4,    # Siêu tham số
-    max_steps=60,          # Thay bằng num_train_epochs = 1 khi train thật
+    lora_rank=16,
+    learning_rate=2e-4,
+    max_steps=60,
     batch_size=2
 ):
     print("=== KHỞI TẠO QUÁ TRÌNH HUẤN LUYỆN ===")
     
-    # 1. TẢI MÔ HÌNH VÀ TOKENIZER BẰNG UNSLOTH
     print("1. Đang tải mô hình DeepSeek-OCR...")
     model, tokenizer = FastVisionModel.from_pretrained(
-        "unsloth/DeepSeek-OCR", # Kéo trực tiếp weights chuẩn từ HF
-        load_in_4bit=False,     # Dùng 16bit LoRA để giữ độ chính xác cao nhất
+        "unsloth/DeepSeek-OCR",
+        load_in_4bit=True,      # TRỌNG YẾU: Bật 4-bit để không bị tràn RAM 15GB của T4
         auto_model=AutoModel,
         trust_remote_code=True,
         unsloth_force_compile=True,
         use_gradient_checkpointing="unsloth"
     )
 
-    # 2. ÁP DỤNG KỸ THUẬT LORA ĐỂ TỐI ƯU HÓA
     print(f"2. Áp dụng LoRA với rank r={lora_rank}...")
     model = FastVisionModel.get_peft_model(
         model,
@@ -45,14 +46,13 @@ def train_model(
             "gate_proj", "up_proj", "down_proj",
         ],
         r=lora_rank,
-        lora_alpha=lora_rank, # Khuyến nghị alpha == r
+        lora_alpha=lora_rank,
         lora_dropout=0,
         bias="none",
         random_state=3407,
         use_rslora=False,
     )
 
-    # 3. CHUẨN BỊ DỮ LIỆU
     print("3. Đang nạp tập dữ liệu huấn luyện...")
     train_dataset = OCRJSONDataset(json_path=os.path.join(project_root, data_index_path), data_root=project_root)
     
@@ -65,7 +65,6 @@ def train_model(
         train_on_responses_only=True,
     )
 
-    # 4. CẤU HÌNH THAM SỐ HUẤN LUYỆN
     FastVisionModel.for_training(model)
     
     training_args = TrainingArguments(
@@ -95,7 +94,6 @@ def train_model(
         args=training_args,
     )
 
-    # 5. TIẾN HÀNH HUẤN LUYỆN VÀ ĐO LƯỜNG LATENCY
     print("\n4. Bắt đầu huấn luyện...")
     start_time = time.time()
     
@@ -105,7 +103,6 @@ def train_model(
     training_time = (end_time - start_time) / 60
     print(f"\n[Hoàn tất] Thời gian huấn luyện: {training_time:.2f} phút.")
 
-    # 6. LƯU MÔ HÌNH VÀ TOKENIZER
     save_path = os.path.join(project_root, output_dir)
     print(f"5. Đang lưu mô hình tại: {save_path}")
     model.save_pretrained(save_path)
@@ -113,5 +110,4 @@ def train_model(
     print("=== HOÀN TẤT TOÀN BỘ QUÁ TRÌNH ===")
 
 if __name__ == "__main__":
-    # Bạn có thể đổi max_steps thành số lớn hơn hoặc đổi lora_rank để test siêu tham số
     train_model(max_steps=60, lora_rank=16)
