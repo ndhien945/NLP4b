@@ -33,7 +33,7 @@ Thumbs.db
 data/*
 !data/dataset.py
 !data/.gitkeep
-!data/processed/*
+!data/processed
 
 models/*
 !models/.gitkeep
@@ -48,5 +48,4 @@ deepseek_ocr/
 .env.*.local
 
 /API.txt
-/data
 /Data.zip
