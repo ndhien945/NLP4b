@@ -2,8 +2,6 @@ import os
 import sys
 from huggingface_hub import snapshot_download
     
-
-
 if sys.stdout.encoding.lower() != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
     
