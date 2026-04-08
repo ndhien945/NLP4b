@@ -4,7 +4,8 @@ import time
 
 # Tắt cơ chế chặn lỗi thái quá của Unsloth (BẮT BUỘC ĐỂ CHẠY DEEPSEEK-OCR)
 os.environ["UNSLOTH_WARN_UNINITIALIZED"] = '0'
-
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 import torch
 from transformers import AutoModel, Trainer, TrainingArguments
 from unsloth import FastVisionModel, is_bf16_supported
