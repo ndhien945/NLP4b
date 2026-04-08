@@ -2,9 +2,10 @@ import os
 import sys
 import time
 
-# Tắt cơ chế chặn lỗi thái quá của Unsloth
+# Tắt cơ chế chặn lỗi thái quá của Unsloth (BẮT BUỘC ĐỂ CHẠY DEEPSEEK-OCR)
 os.environ["UNSLOTH_WARN_UNINITIALIZED"] = '0'
-
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 import torch
 from transformers import AutoModel, Trainer, TrainingArguments
 from unsloth import FastVisionModel, is_bf16_supported
@@ -20,7 +21,6 @@ from src.dataset import OCRJSONDataset, DeepSeekOCRDataCollator
 
 def train_model(
     data_index_path="data/processed/train_split.json",
-    image_root_path="/kaggle/input/datasets/danghiennguyen/datasetocr/data", # ĐIỀU HƯỚNG VÀO DATASET KAGGLE
     output_dir="models/deepseek_lora",
     lora_rank=16,
     learning_rate=2e-4,
@@ -32,7 +32,7 @@ def train_model(
     print("1. Đang tải mô hình DeepSeek-OCR...")
     model, tokenizer = FastVisionModel.from_pretrained(
         "unsloth/DeepSeek-OCR",
-        load_in_4bit=True,
+        load_in_4bit=True,      # TRỌNG YẾU: Bật 4-bit để không bị tràn RAM 15GB của T4
         auto_model=AutoModel,
         trust_remote_code=True,
         unsloth_force_compile=True,
@@ -54,13 +54,8 @@ def train_model(
         use_rslora=False,
     )
 
-    print(f"3. Đang nạp tập dữ liệu huấn luyện từ: {image_root_path}")
-    # TÁCH BIỆT: Load file JSON từ thư mục làm việc, nhưng nạp ảnh từ thư mục Kaggle Input
-    json_full_path = os.path.join(project_root, data_index_path)
-    train_dataset = OCRJSONDataset(
-        json_path=json_full_path, 
-        data_root=image_root_path # <--- Điểm mấu chốt giải quyết lỗi
-    )
+    print("3. Đang nạp tập dữ liệu huấn luyện...")
+    train_dataset = OCRJSONDataset(json_path=os.path.join(project_root, data_index_path), data_root=project_root)
     
     data_collator = DeepSeekOCRDataCollator(
         tokenizer=tokenizer,
