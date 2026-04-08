@@ -1,4 +1,3 @@
-%%writefile src/train.py
 import os
 import sys
 import time
