@@ -1,0 +1,287 @@
+/* Reset mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth; /* Giúp trang cuộn mượt mà khi click vào menu */
+}
+
+body {
+    /* Đổi Montserrat thành Source Serif 4, backup bằng serif */
+    font-family: 'Source Serif 4', serif; 
+    overflow-x: hidden;
+}
+
+/* Khu vực Màn hình chính */
+.hero-section {
+    position: relative;
+    width: 100vw;
+    height: 100vh; /* Chiếm 100% chiều cao màn hình */
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- THAY ĐỔI TỪ VIDEO SANG IMAGE --- */
+
+/* Hình ảnh nền (áp dụng các thuộc tính định vị tương tự video) */
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* QUAN TRỌNG: Cắt cúp và lấp đầy khung hình mà không bị méo */
+    z-index: -2; /* Nằm dưới cùng */
+}
+
+/* --- CÁC THÀNH PHẦN KHÁC GIỮ NGUYÊN --- */
+
+/* Lớp phủ để làm mờ hình ảnh nhẹ, giúp chữ trắng dễ đọc hơn */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 100%);
+    z-index: -1;
+}
+
+/* Navbar chứa Logo và Menu */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Đẩy 2 thành phần ra xa 2 bên */
+    align-items: center;
+    padding: 40px 60px; /* Căn lề trên dưới 40px, trái phải 60px */
+    width: 100%;
+    z-index: 10;
+}
+
+/* Kéo xuống phần Style cho Logo và sửa lại font-weight */
+.logo {
+    color: #ffffff;
+    font-size: 3.5rem;
+    font-weight: 200; /* Đổi từ 100 thành 200 (mỏng nhất của Source Serif 4) */
+    letter-spacing: 2px;
+    user-select: none;
+}
+
+/* Style cho danh sách Menu */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px; /* Khoảng cách giữa các thẻ */
+}
+
+/* Style cho từng liên kết trong Menu */
+.nav-links li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600; /* Chữ đậm để nổi bật */
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Hiệu ứng gạch dưới mượt mà khi Hover */
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.nav-links li a:hover::after,
+.nav-links li a.active::after {
+    width: 100%;
+}
+
+.nav-links li a:hover {
+    opacity: 0.8;
+}
+
+/* Responsive cơ bản cho màn hình nhỏ */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 20px 30px;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .logo {
+        font-size: 2.5rem;
+    }
+    .nav-links {
+        gap: 20px;
+    }
+}
+
+/* --- Style cho Mũi tên điều hướng Slider --- */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa hoàn hảo theo chiều dọc */
+    background-color: rgba(255, 255, 255, 0.05); /* Nền hơi trong suốt */
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 15px 20px;
+    cursor: pointer;
+    z-index: 20; /* Đảm bảo nằm trên cùng để click được */
+    transition: all 0.3s ease;
+    border-radius: 8px; /* Bo góc nhẹ */
+    backdrop-filter: blur(4px); /* Hiệu ứng kính mờ cho mũi tên */
+}
+
+/* Hiệu ứng khi di chuột vào mũi tên */
+.arrow:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* Hiệu ứng khi nhấn click (nút hơi thụt lại) */
+.arrow:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+/* Vị trí mũi tên trái */
+.left-arrow {
+    left: 30px;
+}
+
+/* Vị trí mũi tên phải */
+.right-arrow {
+    right: 30px;
+}
+.placeholder-section {
+    width: 100vw;
+    height: 100vh; /* Mỗi section chiếm trọn 1 màn hình */
+    background-color: #494949; /* Nền đen */
+    color: #ffffff; /* Chữ trắng */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Đường viền mỏng ngăn cách giữa các phần */
+}
+
+.placeholder-section h2 {
+    font-size: 3.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.placeholder-section p {
+    font-size: 1.5rem;
+    font-weight: 400;
+    opacity: 0.6; /* Làm mờ nhẹ dòng chữ "Add content later" */
+    font-style: italic; /* In nghiêng cho có điểm nhấn */
+}
+
+/* Tùy chỉnh riêng cho khu vực AI */
+/* Tìm và sửa lại class này trong style.css của bạn */
+.ai-research-section {
+    position: relative; /* Cần thiết để các phần tử bên trong định vị đúng */
+    background-image: url('img/img4.jpg'); /* Đường dẫn đến ảnh của bạn */
+    background-size: cover; /* Giúp ảnh phủ kín toàn bộ section */
+    background-position: center; /* Giữ ảnh luôn ở giữa */
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Tạo hiệu ứng cuộn ảnh (Parallax) nếu muốn, hoặc bỏ đi */
+}
+
+/* Thêm một lớp phủ mờ (Overlay) để chữ và khung chat dễ đọc hơn trên nền ảnh */
+.ai-research-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Độ mờ đen 60%, bạn có thể tăng giảm tùy thích */
+    z-index: 0;
+}
+
+/* Đảm bảo nội dung bên trong nằm trên lớp phủ */
+.ai-container {
+    position: relative;
+    z-index: 1;
+    /* Giữ nguyên các thuộc tính cũ của bạn bên dưới... */
+}
+
+.ai-container {
+    width: 80%;
+    max-width: 900px;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chat-display {
+    flex-grow: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Định dạng tin nhắn */
+.user-msg, .ai-msg {
+    max-width: 85%;
+    padding: 12px 18px;
+    border-radius: 15px;
+    line-height: 1.6;
+}
+
+.user-msg {
+    align-self: flex-end;
+    background: #ffffff;
+    color: #000;
+}
+
+.ai-msg {
+    align-self: flex-start;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Thanh nhập liệu */
+.ai-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.ai-input-group input {
+    flex-grow: 1;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 15px;
+    color: white;
+    font-family: inherit;
+    border-radius: 8px;
+}
+
+.ai-input-group button {
+    padding: 0 30px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.ai-input-group button:hover {
+    background: #cccccc;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR-AI Landing Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,200;8..60,400;8..60,600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<section class="hero-section" id="main">
+        <div class="overlay"></div>
+
+        <img src="img/img1.jpg" alt="OCR-AI Project Background" class="bg-image" id="bg-img">
+
+        <button class="arrow left-arrow" id="prevBtn">&#10094;</button>
+        <button class="arrow right-arrow" id="nextBtn">&#10095;</button>
+
+        <header class="navbar">
+            <div class="logo">OCR-AI</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#main" class="active">Main</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#ocrai">OCR-AI</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+    </section>
+
+    <section id="about" class="placeholder-section">
+        <h2>About Us</h2>
+        <p>Add content later</p>
+    </section>
+
+    <section id="ocrai" class="placeholder-section ai-research-section">
+        <div class="ai-container">
+            <div class="ai-header">
+                <h2>AI Research: Lịch Sử Việt Nam</h2>
+            </div>
+            
+            <div id="chat-box" class="chat-display">
+                <div class="ai-msg">Xin kính chào quý khách hàng. Tôi có thể giúp gì được cho bạn?</div>
+            </div>
+
+            <div class="ai-input-group">
+                <input type="text" id="user-input" placeholder="Ví dụ: Chiến thắng Điện Biên Phủ 1954...">
+                <button id="send-btn">Phân Tích</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="placeholder-section">
+        <h2>Contact Us</h2>
+        <p>Add content later</p>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
